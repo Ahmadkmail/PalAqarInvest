@@ -1,3 +1,5 @@
+# palAqarInvest
+the app for investing in real estate in Palestine created with MERN and Tailwind css
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
