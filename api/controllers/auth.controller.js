@@ -1,4 +1,5 @@
 import  User  from "../models/user.model.js";
+import bcrypt from "bcryptjs";
 /**
  * Signs up a new user
  *
@@ -24,8 +25,9 @@ import  User  from "../models/user.model.js";
 export const signup = async (req, res) => {
   try {
     // Get the properties from the request body
-    const { username, email, password } = req.body;
-
+    const { username, email } = req.body;
+    const password  =  bcrypt.hashSync(req?.body?.password, 10);
+    console.log(password)
     // Check if any of the properties are missing
     if (!username || !email || !password) {
       // If so, return a 400 response with an error message
@@ -35,12 +37,12 @@ export const signup = async (req, res) => {
     }
 
     // Check if the email address already exists in the database
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email }) || await User.findOne({ username });
 
     // If it does, return a 409 response with an error message
     if (existingUser) {
       return res.status(409).json({
-        message: "Email already exists",
+        message: "Email or username already exists",
       });
     }
 
