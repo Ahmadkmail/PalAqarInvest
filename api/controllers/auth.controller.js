@@ -1,5 +1,6 @@
 import  User  from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import { errorHandler } from "../utils/errorHandler.js";
 /**
  * Signs up a new user
  *
@@ -22,7 +23,7 @@ import bcrypt from "bcryptjs";
  * @param {Object} res - The response object
  * @returns {Promise} A promise that resolves with the response object
  */
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
   try {
     // Get the properties from the request body
     const { username, email } = req.body;
@@ -31,9 +32,7 @@ export const signup = async (req, res) => {
     // Check if any of the properties are missing
     if (!username || !email || !password) {
       // If so, return a 400 response with an error message
-      return res.status(400).json({
-        message: "All fields are required",
-      });
+      next(errorHandler(400, "All fields are required please make sure to fill them"));
     }
 
     // Check if the email address already exists in the database
@@ -41,9 +40,7 @@ export const signup = async (req, res) => {
 
     // If it does, return a 409 response with an error message
     if (existingUser) {
-      return res.status(409).json({
-        message: "Email or username already exists",
-      });
+        next(errorHandler(409, "User already exists"));
     }
 
     // Create a new user in the database
@@ -59,9 +56,6 @@ export const signup = async (req, res) => {
   } catch (error) {
     // If anything goes wrong, catch the error, log it to the console, and
     // return a 500 response with an error message
-    console.log(error);
-    res.status(500).json({
-      message: "Something went wrong",
-    });
+    next(errorHandler(500,'internal server error :('));
   }
 };
