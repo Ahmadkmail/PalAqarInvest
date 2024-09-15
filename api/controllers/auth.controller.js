@@ -1,6 +1,7 @@
 import  User  from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { errorHandler } from "../utils/errorHandler.js";
+import jwt from "jsonwebtoken";
 /**
  * Signs up a new user
  *
@@ -58,4 +59,24 @@ export const signup = async (req, res, next) => {
     // return a 500 response with an error message
     next(errorHandler(500,'internal server error :('));
   }
+
 };
+export const signin = async (req, res, next) => {
+  try{
+  const { email, password } = req.body;
+  const existingUser = await User.findOne({ email });
+  if (!existingUser) {
+    next(errorHandler(404, "User not found"));
+  }
+  if (!bcrypt.compareSync(password, existingUser?.password)) {
+    next(errorHandler(401, "Invalid credentials"));
+  }
+  const {password : pass, ...rest} = existingUser._doc;
+  const token = jwt.sign({id : existingUser._id}, process.env.JWT_SECRET);
+  res.cookie('token', token, { httpOnly: true })
+  .status(200)
+  .json(rest);
+}catch(error){
+  next(errorHandler(500,'internal server error :('));   
+}
+}

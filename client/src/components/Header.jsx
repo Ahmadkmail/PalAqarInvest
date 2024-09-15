@@ -14,7 +14,7 @@ export default function Header() {
         </form>
         <h1 className='font-bold text-sm sm:text-xl flex  justify-center items-center'>
             <img src={Aqar} className='h-15 w-20'></img>
-            <span className='text-slate-500 first-letter:text-red-700 hidden sm:inline '>AQAR</span>
+            <span className='text-slate-500 first-letter:text-red-700 first-letter:font-bold first-letter:font-serif hidden sm:inline '>AQAR</span>
             <span className='text-slate-600 hidden sm:inline'>PAL</span>
         </h1>
       <ul className='list-none flex justify-between items-center w-40 gap-4 '>
