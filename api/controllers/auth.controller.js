@@ -63,19 +63,18 @@ export const signup = async (req, res, next) => {
 };
 export const signin = async (req, res, next) => {
   try{
-  const { email, password } = req.body;
+  const { email } = req.body;
   const existingUser = await User.findOne({ email });
   if (!existingUser) {
     next(errorHandler(404, "User not found"));
   }
-  if (!bcrypt.compareSync(password, existingUser?.password)) {
-    next(errorHandler(401, "Invalid credentials"));
+  if (bcrypt.compareSync(req?.body?.password, existingUser?.password)) {
+    const {password : pass, ...rest} = existingUser._doc;
+    const token = jwt.sign({id : existingUser._id}, process.env.JWT_SECRET);
+    res.cookie('token', token, { httpOnly: true }).status(200).json({...rest,success : true});
   }
-  const {password : pass, ...rest} = existingUser._doc;
-  const token = jwt.sign({id : existingUser._id}, process.env.JWT_SECRET);
-  res.cookie('token', token, { httpOnly: true })
-  .status(200)
-  .json(rest);
+  next(errorHandler(401, "Invalid credentials"));
+  
 }catch(error){
   next(errorHandler(500,'internal server error :('));   
 }

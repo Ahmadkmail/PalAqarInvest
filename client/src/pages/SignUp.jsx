@@ -17,9 +17,6 @@ export default function SignUp() {
    */
   const handleSubmit = async  (e) =>{
     e.preventDefault();
-    // const res = await fetch("http://localhost:3000/api/user/test", {
-    //   method: 'GET'
-    // })
     const res = await fetch("http://localhost:3000/api/auth/signup", {
       method: 'POST'
       , headers: {
@@ -42,7 +39,7 @@ export default function SignUp() {
       </form>
       <div className='flex gap-2 mt-5'>
         <p>Have an account?</p>
-        <Link className='text-blue-500' to='/sign-in'>Sign In</Link>
+        <Link className='text-blue-500' to='/signin'>Sign In</Link>
       </div>
     </div>
   )
